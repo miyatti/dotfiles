@@ -31,6 +31,7 @@ set clipboard+=unnamed
  set clipboard=unnamed
  " 挿入モードでCtrl+kを押すとクリップボードの内容を貼り付けられるようにする "
  imap <C-p>  <ESC>"*pa
+let mapleader = "\\"
 
  " Ev/Rvでvimrcの編集と反映
  command! Ev edit $MYVIMRC
@@ -40,3 +41,8 @@ set clipboard+=unnamed
 
  " ファイルタイプ判定をon
  filetype plugin on
+" NERDTreeを表示
+nnoremap <leader>n :NERDTree<CR>
+
+
+
