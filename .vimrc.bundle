@@ -9,7 +9,6 @@ set nocompatible               " be iMproved
 Bundle 'gmarik/vundle'
 
 Bundle 'http://github.com/tpope/vim-rails'
-Bundle "http://github.com/scrooloose/nerdtree.git"
 Bundle "http://github.com/galambalazs/smoothscroll.git"
 Bundle 'https://github.com/vim-scripts/minibufexpl.vim.git'
 Bundle 'https://github.com/scrooloose/nerdcommenter.git'
