@@ -7,7 +7,7 @@ call vundle#rc()
  " let Vundle manage Vundle
  " required!
 Bundle 'http://github.com/gmarik/vundle.git'
-
+Bundle 'https://github.com/scrooloose/nerdtree.git'
 Bundle 'http://github.com/tpope/vim-rails'
 Bundle "http://github.com/galambalazs/smoothscroll.git"
 Bundle 'https://github.com/fholgado/minibufexpl.vim.git'
