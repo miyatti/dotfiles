@@ -22,44 +22,44 @@ setopt prompt_subst
 autoload colors
 colors
 case ${UID} in
-0)
-    PROMPT="%B%{${fg[red]}%}%/#%{${reset_color}%}%b "
-    PROMPT2="%B%{${fg[red]}%}%_#%{${reset_color}%}%b "
-    SPROMPT="%B%{${fg[red]}%}%r is correct? [n,y,a,e]:%{${reset_color}%}%b "
-    [ -n "${REMOTEHOST}${SSH_CONNECTION}" ] &&
-        PROMPT="%{${fg[cyan]}%}$(echo ${HOST%%.*} | tr '[a-z]' '[A-Z]') ${PROMPT}"
-    ;;
-*)
-    #
-    # Color
-    #
-    DEFAULT=$'%{\e[1;0m%}'
-    RESET="%{${reset_color}%}"
-    GREEN="%{${fg[green]}%}"
-    BLUE="%{${fg[blue]}%}"
-    RED="%{${fg[red]}%}"
-    CYAN="%{${fg[cyan]}%}"
-    WHITE="%{${fg[white]}%}"
-
-    #
-    # Prompt
-    #
-    PROMPT='%{$fg_bold[blue]%}${USER}@%m ${RESET}${WHITE}$ ${RESET}'
-    RPROMPT='${RESET}${WHITE}[${BLUE}%(5~,%-2~/.../%2~,%~)% ${WHITE}]${RESET}'
-
-    #
-    # Vi入力モードでPROMPTの色を変える
-    # http://memo.officebrook.net/20090226.html
-    function zle-line-init zle-keymap-select {
-      case $KEYMAP in
-        vicmd)
-        PROMPT="%{$fg_bold[cyan]%}${USER}@%m ${RESET}${WHITE}$ ${RESET}"
+    0)
+        PROMPT="%B%{${fg[red]}%}%/#%{${reset_color}%}%b "
+        PROMPT2="%B%{${fg[red]}%}%_#%{${reset_color}%}%b "
+        SPROMPT="%B%{${fg[red]}%}%r is correct? [n,y,a,e]:%{${reset_color}%}%b "
+        [ -n "${REMOTEHOST}${SSH_CONNECTION}" ] &&
+            PROMPT="%{${fg[cyan]}%}$(echo ${HOST%%.*} | tr '[a-z]' '[A-Z]') ${PROMPT}"
         ;;
-        main|viins)
-        PROMPT="%{$fg_bold[blue]%}${USER}@%m ${RESET}${WHITE}$ ${RESET}"
-        ;;
-      esac
-      zle reset-prompt
+    *)
+        #
+        # Color
+        #
+        DEFAULT=$'%{\e[1;0m%}'
+        RESET="%{${reset_color}%}"
+        GREEN="%{${fg[green]}%}"
+        BLUE="%{${fg[blue]}%}"
+        RED="%{${fg[red]}%}"
+        CYAN="%{${fg[cyan]}%}"
+        WHITE="%{${fg[white]}%}"
+
+        #
+        # Prompt
+        #
+        PROMPT='%{$fg_bold[blue]%}${USER}@%m ${RESET}${WHITE}$ ${RESET}'
+        RPROMPT='${RESET}${WHITE}[${BLUE}%(5~,%-2~/.../%2~,%~)% ${WHITE}]${RESET}'
+
+        #
+        # Vi入力モードでPROMPTの色を変える
+        # http://memo.officebrook.net/20090226.html
+        function zle-line-init zle-keymap-select {
+        case $KEYMAP in
+            vicmd)
+                PROMPT="%{$fg_bold[cyan]%}${USER}@%m ${RESET}${WHITE}$ ${RESET}"
+                ;;
+            main|viins)
+                PROMPT="%{$fg_bold[blue]%}${USER}@%m ${RESET}${WHITE}$ ${RESET}"
+                ;;
+        esac
+        zle reset-prompt
     }
     zle -N zle-line-init
     zle -N zle-keymap-select
@@ -67,88 +67,124 @@ case ${UID} in
     # Show git branch when you are in git repository
     # http://d.hatena.ne.jp/mollifier/20100906/p1
 
-    autoload -Uz add-zsh-hook
-    autoload -Uz vcs_info
+#    autoload -Uz add-zsh-hook
+#    autoload -Uz vcs_info
 
-    zstyle ':vcs_info:*' enable git svn hg bzr
-    zstyle ':vcs_info:*' formats '(%s)-[%b]'
-    zstyle ':vcs_info:*' actionformats '(%s)-[%b|%a]'
-    zstyle ':vcs_info:(svn|bzr):*' branchformat '%b:r%r'
-    zstyle ':vcs_info:bzr:*' use-simple true
+#    zstyle ':vcs_info:*' enable git svn hg bzr
+#    zstyle ':vcs_info:*' formats '(%s)-[%b]'
+#    zstyle ':vcs_info:*' actionformats '(%s)-[%b|%a]'
+#    zstyle ':vcs_info:(svn|bzr):*' branchformat '%b:r%r'
+#    zstyle ':vcs_info:bzr:*' use-simple true
 
-    autoload -Uz is-at-least
-    if is-at-least 4.3.10; then
-      # この check-for-changes が今回の設定するところ
-      zstyle ':vcs_info:git:*' check-for-changes true
-      zstyle ':vcs_info:git:*' stagedstr "+"    # 適当な文字列に変更する
-      zstyle ':vcs_info:git:*' unstagedstr "-"  # 適当の文字列に変更する
-      zstyle ':vcs_info:git:*' formats '(%s)-[%c%u%b]'
-      zstyle ':vcs_info:git:*' actionformats '(%s)-[%c%u%b|%a]'
-    fi
+#    autoload -Uz is-at-least
+#    if is-at-least 4.3.10; then
+#        # この check-for-changes が今回の設定するところ
+#        zstyle ':vcs_info:git:*' check-for-changes true
+#        zstyle ':vcs_info:git:*' stagedstr "+"    # 適当な文字列に変更する
+#        zstyle ':vcs_info:git:*' unstagedstr "-"  # 適当の文字列に変更する
+#        zstyle ':vcs_info:git:*' formats '(%s)-[%c%u%b]'
+#        zstyle ':vcs_info:git:*' actionformats '(%s)-[%c%u%b|%a]'
+#    fi
 
-    function _update_vcs_info_msg() {
-        psvar=()
-        LANG=en_US.UTF-8 vcs_info
-        psvar[2]=$(_git_not_pushed)
-        [[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
-    }
-    add-zsh-hook precmd _update_vcs_info_msg
+#    function _update_vcs_info_msg() {
+#    psvar=()
+#    LANG=en_US.UTF-8 vcs_info
+#    psvar[2]=$(_git_not_pushed)
+#    [[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
+#}
+#add-zsh-hook precmd _update_vcs_info_msg
 
-    # show status of git pushed to HEAD in prompt
-    function _git_not_pushed()
-    {
-      if [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = "true" ]; then
-        head="$(git rev-parse HEAD)"
-        for x in $(git rev-parse --remotes)
-        do
-          if [ "$head" = "$x" ]; then
-            return 0
-          fi
-        done
-        echo "|?"
-      fi
-      return 0
-    }
+#
+# Show branch name in Zsh's right prompt
+#
 
-    # git のブランチ名 *と作業状態* を zsh の右プロンプトに表示＋ status に応じて色もつけてみた - Yarukidenized:ヤルキデナイズド :
-    # http://d.hatena.ne.jp/uasi/20091025/1256458798
-    autoload -Uz VCS_INFO_get_data_git; VCS_INFO_get_data_git 2> /dev/null
+autoload -Uz VCS_INFO_get_data_git; VCS_INFO_get_data_git 2> /dev/null
 
-    function rprompt-git-current-branch {
-      local name st color gitdir action pushed
-      if [[ "$PWD" =~ '/\.git(/.*)?$' ]]; then
-              return
-      fi
+function rprompt-git-current-branch {
+local name st color gitdir action
+if [[ "$PWD" =~ '/¥.git(/.*)?$' ]]; then
+    return
+fi
+name=`git rev-parse --abbrev-ref=loose HEAD 2> /dev/null`
+if [[ -z $name ]]; then
+    return
+fi
 
-      name=`git rev-parse --abbrev-ref=loose HEAD 2> /dev/null`
-      if [[ -z $name ]]; then
-              return
-      fi
+gitdir=`git rev-parse --git-dir 2> /dev/null`
+action=`VCS_INFO_git_getaction "$gitdir"` && action="($action)"
 
-      gitdir=`git rev-parse --git-dir 2> /dev/null`
-      action=`VCS_INFO_git_getaction "$gitdir"` && action="|$action"
-      pushed="`_git_not_pushed`"
+st=`git status 2> /dev/null`
+if [[ -n `echo "$st" | grep "^nothing to"` ]]; then
+    color=%F{green}
+elif [[ -n `echo "$st" | grep "^nothing added"` ]]; then
+    color=%F{yellow}
+elif [[ -n `echo "$st" | grep "^# Untracked"` ]]; then
+    color=%B%F{red}
+else
+    color=%F{red}
+fi
 
-      st=`git status 2> /dev/null`
-      if [[ "$st" =~ "(?m)^nothing to" ]]; then
-        color=%F{green}
-      elif [[ "$st" =~ "(?m)^nothing added" ]]; then
-        color=%F{yellow}
-      elif [[ "$st" =~ "(?m)^# Untracked" ]]; then
-        color=%B%F{red}
-      else
-        color=%F{red}
-      fi
+echo "$color$name$action%f%b "
+}
 
-      echo "[$color$name$action$pushed%f%b]"
-    }
+setopt prompt_subst
+
+RPROMPT='[`rprompt-git-current-branch`%~]'
+# show status of git pushed to HEAD in prompt
+#function _git_not_pushed()
+#{
+#    if [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = "true" ]; then
+#        head="$(git rev-parse HEAD)"
+#        for x in $(git rev-parse --remotes)
+#        do
+#            if [ "$head" = "$x" ]; then
+#                return 0
+#            fi
+#        done
+#        echo "|?"
+#    fi
+#    return 0
+#}
+
+# git のブランチ名 *と作業状態* を zsh の右プロンプトに表示＋ status に応じて色もつけてみた - Yarukidenized:ヤルキデナイズド :
+# http://d.hatena.ne.jp/uasi/20091025/1256458798
+#autoload -Uz VCS_INFO_get_data_git; VCS_INFO_get_data_git 2> /dev/null
+
+#function rprompt-git-current-branch {
+#local name st color gitdir action pushed
+#if [[ "$PWD" =~ '/\.git(/.*)?$' ]]; then
+#    return
+#fi
+
+#name=`git rev-parse --abbrev-ref=loose HEAD 2> /dev/null`
+#if [[ -z $name ]]; then
+#    return
+#fi
+
+#gitdir=`git rev-parse --git-dir 2> /dev/null`
+#action=`VCS_INFO_git_getaction "$gitdir"` && action="|$action"
+#pushed="`_git_not_pushed`"
+
+#st=`git status 2> /dev/null`
+#if [[ "$st" =~ "(?m)^nothing to" ]]; then
+#    color=%F{green}
+#elif [[ "$st" =~ "(?m)^nothing added" ]]; then
+#    color=%F{yellow}
+#elif [[ "$st" =~ "(?m)^# Untracked" ]]; then
+#    color=%B%F{red}
+#else
+#    color=%F{red}
+#fi
+#
+#echo "[$color$name$action$pushed%f%b]"
+#    }
 
     # PCRE 互換の正規表現を使う
     #setopt re_match_pcre
 
     #RPROMPT='`rprompt-git-current-branch`${RESET}${WHITE}[${BLUE}%(5~,%-2~/.../%2~,%~)${WHITE}]${RESET}'
 
-    ;;
+#    ;;
 esac
 
 # 指定したコマンド名がなく、ディレクトリ名と一致した場合 cd する
@@ -355,10 +391,10 @@ e_RED=`echo -e "¥033[1;31m"`
 e_BLUE=`echo -e "¥033[1;36m"`
 
 function make() {
-    LANG=C command make "$@" 2>&1 | sed -e "s@[Ee]rror:.*@$e_RED&$e_normal@g" -e "s@cannot¥sfind.*@$e_RED&$e_normal@g" -e "s@[Ww]arning:.*@$e_BLUE&$e_normal@g"
+LANG=C command make "$@" 2>&1 | sed -e "s@[Ee]rror:.*@$e_RED&$e_normal@g" -e "s@cannot¥sfind.*@$e_RED&$e_normal@g" -e "s@[Ww]arning:.*@$e_BLUE&$e_normal@g"
 }
 function cwaf() {
-    LANG=C command ./waf "$@" 2>&1 | sed -e "s@[Ee]rror:.*@$e_RED&$e_normal@g" -e "s@cannot¥sfind.*@$e_RED&$e_normal@g" -e "s@[Ww]arning:.*@$e_BLUE&$e_normal@g"
+LANG=C command ./waf "$@" 2>&1 | sed -e "s@[Ee]rror:.*@$e_RED&$e_normal@g" -e "s@cannot¥sfind.*@$e_RED&$e_normal@g" -e "s@[Ww]arning:.*@$e_BLUE&$e_normal@g"
 }
 
 ## Completion configuration
@@ -391,40 +427,40 @@ setopt complete_aliases     # aliased ls needs if file/dir completions work
 alias where="command -v"
 
 case "${OSTYPE}" in
-freebsd*|darwin*)
-    alias ls="ls -alG"
-    zle -N expand-to-home-or-insert
-    bindkey "@"  expand-to-home-or-insert
-    ;;
-linux*)
-    alias la="ls -al"
-    ;;
+    freebsd*|darwin*)
+        alias ls="ls -alG"
+        zle -N expand-to-home-or-insert
+        bindkey "@"  expand-to-home-or-insert
+        ;;
+    linux*)
+        alias la="ls -al"
+        ;;
 esac
 
 
 case "${OSTYPE}" in
-# MacOSX
-darwin*)
+    # MacOSX
+    darwin*)
     export PATH=$PATH:/opt/local/bin:/opt/local/sbin/
     export PATH=$PATH:/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/
     ;;
 freebsd*)
     case ${UID} in
-    0)
-        updateports()
-        {
-            if [ -f /usr/ports/.portsnap.INDEX ]
-            then
-                portsnap fetch update
-            else
-                portsnap fetch extract update
-            fi
-            (cd /usr/ports/; make index)
+        0)
+            updateports()
+            {
+                if [ -f /usr/ports/.portsnap.INDEX ]
+                then
+                    portsnap fetch update
+                else
+                    portsnap fetch extract update
+                fi
+                (cd /usr/ports/; make index)
 
-            portversion -v -l \<
-        }
-        alias appsupgrade='pkgdb -F && BATCH=YES NO_CHECKSUM=YES portupgrade -a'
-        ;;
+                portversion -v -l \<
+            }
+            alias appsupgrade='pkgdb -F && BATCH=YES NO_CHECKSUM=YES portupgrade -a'
+            ;;
     esac
     ;;
 esac
@@ -435,45 +471,45 @@ esac
 unset LSCOLORS
 
 case "${TERM}" in
-xterm)
-    export TERM=xterm-color
+    xterm)
+        export TERM=xterm-color
 
-    ;;
-kterm)
-    export TERM=kterm-color
-    # set BackSpace control character
+        ;;
+    kterm)
+        export TERM=kterm-color
+        # set BackSpace control character
 
-    stty erase
-    ;;
+        stty erase
+        ;;
 
-cons25)
-    unset LANG
-  export LSCOLORS=ExFxCxdxBxegedabagacad
+    cons25)
+        unset LANG
+        export LSCOLORS=ExFxCxdxBxegedabagacad
 
-    export LS_COLORS='di=01;32:ln=01;35:so=01;32:ex=01;31:bd=46;34:cd=43;34:su=41;30:sg=46;30'
-    zstyle ':completion:*' list-colors \
-        'di=;36;1' 'ln=;35;1' 'so=;32;1' 'ex=31;1' 'bd=46;34' 'cd=43;34'
-    ;;
+        export LS_COLORS='di=01;32:ln=01;35:so=01;32:ex=01;31:bd=46;34:cd=43;34:su=41;30:sg=46;30'
+        zstyle ':completion:*' list-colors \
+            'di=;36;1' 'ln=;35;1' 'so=;32;1' 'ex=31;1' 'bd=46;34' 'cd=43;34'
+        ;;
 
-kterm*|xterm*)
-   # Terminal.app
-#    precmd() {
-#        echo -ne "\033]0;${USER}@${HOST%%.*}:${PWD}\007"
-#    }
-    # export LSCOLORS=exfxcxdxbxegedabagacad
-    # export LSCOLORS=gxfxcxdxbxegedabagacad
-    # export LS_COLORS='di=1;34:ln=35:so=32:pi=33:ex=31:bd=46;34:cd=43;34:su=41;30:sg=46;30'
+    kterm*|xterm*)
+        # Terminal.app
+        #    precmd() {
+        #        echo -ne "\033]0;${USER}@${HOST%%.*}:${PWD}\007"
+        #    }
+        # export LSCOLORS=exfxcxdxbxegedabagacad
+        # export LSCOLORS=gxfxcxdxbxegedabagacad
+        # export LS_COLORS='di=1;34:ln=35:so=32:pi=33:ex=31:bd=46;34:cd=43;34:su=41;30:sg=46;30'
 
-    export CLICOLOR=1
-    export LSCOLORS=ExFxCxDxBxegedabagacad
+        export CLICOLOR=1
+        export LSCOLORS=ExFxCxDxBxegedabagacad
 
-    zstyle ':completion:*' list-colors \
-        'di=36' 'ln=35' 'so=32' 'ex=31' 'bd=46;34' 'cd=43;34'
-    ;;
+        zstyle ':completion:*' list-colors \
+            'di=36' 'ln=35' 'so=32' 'ex=31' 'bd=46;34' 'cd=43;34'
+        ;;
 
-dumb)
-    echo "Welcome Emacs Shell"
-    ;;
+    dumb)
+        echo "Welcome Emacs Shell"
+        ;;
 esac
 
 
@@ -485,11 +521,11 @@ export PATH=$PATH:/sbin:/usr/local/bin:usr/bin
 export MANPATH=$MANPATH:/opt/local/man:/usr/local/share/man
 
 expand-to-home-or-insert () {
-        if [ "$LBUFFER" = "" -o "$LBUFFER[-1]" = " " ]; then
-                LBUFFER+="~/"
-        else
-                zle self-insert
-        fi
+    if [ "$LBUFFER" = "" -o "$LBUFFER[-1]" = " " ]; then
+        LBUFFER+="~/"
+    else
+        zle self-insert
+    fi
 }
 
 # C-M-h でチートシートを表示する
@@ -501,34 +537,34 @@ zle -N cheat-sheet
 # http://subtech.g.hatena.ne.jp/cho45/20080617/1213629154
 typeset -A abbreviations
 abbreviations=(
-  "L"    "| $PAGER"
-  "G"    "| grep"
+"L"    "| $PAGER"
+"G"    "| grep"
 
-  "HEAD^"     "HEAD\\^"
-  "HEAD^^"    "HEAD\\^\\^"
-  "HEAD^^^"   "HEAD\\^\\^\\^"
-  "HEAD^^^^"  "HEAD\\^\\^\\^\\^\\^"
-  "HEAD^^^^^" "HEAD\\^\\^\\^\\^\\^"
+"HEAD^"     "HEAD\\^"
+"HEAD^^"    "HEAD\\^\\^"
+"HEAD^^^"   "HEAD\\^\\^\\^"
+"HEAD^^^^"  "HEAD\\^\\^\\^\\^\\^"
+"HEAD^^^^^" "HEAD\\^\\^\\^\\^\\^"
 )
 
 magic-abbrev-expand () {
-  local MATCH
-  LBUFFER=${LBUFFER%%(#m)[-_a-zA-Z0-9^]#}
-  LBUFFER+=${abbreviations[$MATCH]:-$MATCH}
+    local MATCH
+    LBUFFER=${LBUFFER%%(#m)[-_a-zA-Z0-9^]#}
+    LBUFFER+=${abbreviations[$MATCH]:-$MATCH}
 }
 
 magic-abbrev-expand-and-insert () {
-  magic-abbrev-expand
-  zle self-insert
+    magic-abbrev-expand
+    zle self-insert
 }
 
 magic-abbrev-expand-and-accept () {
-  magic-abbrev-expand
-  zle accept-line
+    magic-abbrev-expand
+    zle accept-line
 }
 
 no-magic-abbrev-expand () {
-  LBUFFER+=' '
+    LBUFFER+=' '
 }
 
 zle -N magic-abbrev-expand
@@ -550,115 +586,115 @@ bindkey "^x " no-magic-abbrev-expand
 # http://d.hatena.ne.jp/tarao/20100531/1275322620
 # incremental completion
 # if is-at-least 4.3.10; then
-    # function () { # precompile
-        # local A
-        # A=~/.zsh/auto-fu.zsh/auto-fu.zsh
-        # [[ -e "${A:r}.zwc" ]] && [[ "$A" -ot "${A:r}.zwc" ]] ||
-        # zsh -c "source $A; auto-fu-zcompile $A ${A:h}" >/dev/null 2>&1
-    # }
-    # source ~/.zsh/auto-fu.zsh/auto-fu; auto-fu-install
-    # function zle-line-init () { auto-fu-init }
-    # zle -N zle-line-init
-    # zstyle ':auto-fu:highlight' input bold
-    # zstyle ':auto-fu:highlight' completion fg=white
-    # zstyle ':auto-fu:var' postdisplay ''
-    # function afu+cancel () {
-        # afu-clearing-maybe
-        # ((afu_in_p == 1)) && { afu_in_p=0; BUFFER="$buffer_cur"; }
-    # }
-    # function bindkey-advice-before () {
-        # local key="$1"
-        # local advice="$2"
-        # local widget="$3"
-        # [[ -z "$widget" ]] && {
-            # local -a bind
-            # bind=(`bindkey -M main "$key"`)
-            # widget=$bind[2]
-        # }
-        # local fun="$advice"
-        # if [[ "$widget" != "undefined-key" ]]; then
-            # local code=${"$(<=(cat <<"EOT"
-                # function $advice-$widget () {
-                    # zle $advice
-                    # zle $widget
-                # }
-                # fun="$advice-$widget"
+# function () { # precompile
+# local A
+# A=~/.zsh/auto-fu.zsh/auto-fu.zsh
+# [[ -e "${A:r}.zwc" ]] && [[ "$A" -ot "${A:r}.zwc" ]] ||
+    # zsh -c "source $A; auto-fu-zcompile $A ${A:h}" >/dev/null 2>&1
+# }
+# source ~/.zsh/auto-fu.zsh/auto-fu; auto-fu-install
+# function zle-line-init () { auto-fu-init }
+# zle -N zle-line-init
+# zstyle ':auto-fu:highlight' input bold
+# zstyle ':auto-fu:highlight' completion fg=white
+# zstyle ':auto-fu:var' postdisplay ''
+# function afu+cancel () {
+# afu-clearing-maybe
+# ((afu_in_p == 1)) && { afu_in_p=0; BUFFER="$buffer_cur"; }
+# }
+# function bindkey-advice-before () {
+# local key="$1"
+# local advice="$2"
+# local widget="$3"
+# [[ -z "$widget" ]] && {
+# local -a bind
+# bind=(`bindkey -M main "$key"`)
+# widget=$bind[2]
+# }
+# local fun="$advice"
+# if [[ "$widget" != "undefined-key" ]]; then
+# local code=${"$(<=(cat <<"EOT"
+# function $advice-$widget () {
+# zle $advice
+# zle $widget
+# }
+# fun="$advice-$widget"
 # EOT
-            # ))"}
-            # eval "${${${code//\$widget/$widget}//\$key/$key}//\$advice/$advice}"
-        # fi
-        # zle -N "$fun"
-        # bindkey -M afu "$key" "$fun"
-    # }
-    # bindkey-advice-before "^G" afu+cancel
-    # bindkey-advice-before "^[" afu+cancel
-    # bindkey-advice-before "^J" afu+cancel afu+accept-line
+# ))"}
+# eval "${${${code//\$widget/$widget}//\$key/$key}//\$advice/$advice}"
+# fi
+# zle -N "$fun"
+# bindkey -M afu "$key" "$fun"
+# }
+# bindkey-advice-before "^G" afu+cancel
+# bindkey-advice-before "^[" afu+cancel
+# bindkey-advice-before "^J" afu+cancel afu+accept-line
 
-    # # delete unambiguous prefix when accepting line
-    # function afu+delete-unambiguous-prefix () {
-        # afu-clearing-maybe
-        # local buf; buf="$BUFFER"
-        # local bufc; bufc="$buffer_cur"
-        # [[ -z "$cursor_new" ]] && cursor_new=-1
-        # [[ "$buf[$cursor_new]" == ' ' ]] && return
-        # [[ "$buf[$cursor_new]" == '/' ]] && return
-        # ((afu_in_p == 1)) && [[ "$buf" != "$bufc" ]] && {
-            # # there are more than one completion candidates
-            # zle afu+complete-word
-            # [[ "$buf" == "$BUFFER" ]] && {
-                # # the completion suffix was an unambiguous prefix
-                # afu_in_p=0; buf="$bufc"
-            # }
-            # BUFFER="$buf"
-            # buffer_cur="$bufc"
-        # }
-    # }
-    # zle -N afu+delete-unambiguous-prefix
-    # function afu-ad-delete-unambiguous-prefix () {
-        # local afufun="$1"
-        # local code; code=$functions[$afufun]
-        # eval "function $afufun () { zle afu+delete-unambiguous-prefix; $code }"
-    # }
-    # afu-ad-delete-unambiguous-prefix afu+accept-line
-    # afu-ad-delete-unambiguous-prefix afu+accept-line-and-down-history
-    # afu-ad-delete-unambiguous-prefix afu+accept-and-hold
+# # delete unambiguous prefix when accepting line
+# function afu+delete-unambiguous-prefix () {
+# afu-clearing-maybe
+# local buf; buf="$BUFFER"
+# local bufc; bufc="$buffer_cur"
+# [[ -z "$cursor_new" ]] && cursor_new=-1
+# [[ "$buf[$cursor_new]" == ' ' ]] && return
+# [[ "$buf[$cursor_new]" == '/' ]] && return
+# ((afu_in_p == 1)) && [[ "$buf" != "$bufc" ]] && {
+# # there are more than one completion candidates
+# zle afu+complete-word
+# [[ "$buf" == "$BUFFER" ]] && {
+# # the completion suffix was an unambiguous prefix
+# afu_in_p=0; buf="$bufc"
+# }
+# BUFFER="$buf"
+# buffer_cur="$bufc"
+# }
+# }
+# zle -N afu+delete-unambiguous-prefix
+# function afu-ad-delete-unambiguous-prefix () {
+# local afufun="$1"
+# local code; code=$functions[$afufun]
+# eval "function $afufun () { zle afu+delete-unambiguous-prefix; $code }"
+# }
+# afu-ad-delete-unambiguous-prefix afu+accept-line
+# afu-ad-delete-unambiguous-prefix afu+accept-line-and-down-history
+# afu-ad-delete-unambiguous-prefix afu+accept-and-hold
 # fi
 
 
 function rmf(){
-   for file in $*
-   do
-      __rm_single_file $file
-   done
+for file in $*
+do
+    __rm_single_file $file
+done
 }
 
 function __rm_single_file(){
-       if ! [ -d ~/.Trash/ ]
-       then
-               command /bin/mkdir ~/.Trash
-       fi
+if ! [ -d ~/.Trash/ ]
+then
+    command /bin/mkdir ~/.Trash
+fi
 
-       if ! [ $# -eq 1 ]
-       then
-               echo "__rm_single_file: 1 argument required but $# passed."
-               exit
-       fi
+if ! [ $# -eq 1 ]
+then
+    echo "__rm_single_file: 1 argument required but $# passed."
+    exit
+fi
 
-       if [ -e $1 ]
-       then
-               BASENAME=`basename $1`
-               NAME=$BASENAME
-               COUNT=0
-               while [ -e ~/.Trash/$NAME ]
-               do
-                       COUNT=$(($COUNT+1))
-                       NAME="$BASENAME.$COUNT"
-               done
+if [ -e $1 ]
+then
+    BASENAME=`basename $1`
+    NAME=$BASENAME
+    COUNT=0
+    while [ -e ~/.Trash/$NAME ]
+    do
+        COUNT=$(($COUNT+1))
+        NAME="$BASENAME.$COUNT"
+    done
 
-               command /bin/mv $1 ~/.Trash/$NAME
-       else
-               echo "No such file or directory: $file"
-       fi
+    command /bin/mv $1 ~/.Trash/$NAME
+else
+    echo "No such file or directory: $file"
+fi
 }
 
 ## alias設定
@@ -666,13 +702,13 @@ function __rm_single_file(){
 [ -f ~/dotfiles/.zshrc.alias ] && source ~/dotfiles/.zshrc.alias
 
 case "${OSTYPE}" in
-# Mac(Unix)
-darwin*)
+    # Mac(Unix)
+    darwin*)
     # ここに設定
     [ -f ~/dotfiles/.zshrc.osx ] && source ~/dotfiles/.zshrc.osx
     ;;
-# Linux
-linux*)
+    # Linux
+    linux*)
     # ここに設定
     [ -f ~/dotfiles/.zshrc.linux ] && source ~/dotfiles/.zshrc.linux
     ;;
