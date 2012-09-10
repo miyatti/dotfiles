@@ -1,3 +1,6 @@
+#sudo
+alias sudo='sudo '
+
 # ls
 alias la="ls -a"
 alias lf="ls -F"
